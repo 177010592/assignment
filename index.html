@@ -1,0 +1,149 @@
+<html lang="en">
+
+<head>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+
+	<!-- Custom CSS -->
+	<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/vendor/bootstrap/css/bootstrap-dialog.css" rel="stylesheet" />
+
+</head>
+
+<body id="page-top">
+
+	<div class="content-wrapper">
+		<div class="container-fluid" id="contentPanel">
+			<div class="row">
+				<div class="col-md-3 col-md-offset-3">
+					<!-- Card -->
+					<div class="card mb-3">
+						<div class="card-header">
+							<i class="fa fa-search"></i> City Search
+						</div>
+						<form action="javascript:weatherSearch($('#index').val(), $('#keyword').val());">
+							<div class="card-body form-inline my-2 my-lg-0 mr-lg-2">
+								<input id="index" class="form-control" type="hidden" value="name" >
+								<input id="keyword" class="form-control" type="text" placeholder="Name"> 
+								<span class="input-group-append">
+									<button class="btn btn-primary" type="submit" style="height: 35px;" id="search">Search
+										<i class="fa fa-search"></i>
+									</button>
+								</span>
+								<!-- System message -->
+								<div class="message">
+									<span id="system-message"></span> 
+									<span id="error-message"></span>
+								</div>	
+							</div>
+						</form>
+					</div>
+					<!-- Card -->
+					<div class="card mb-3">
+						<div class="card-body weather">
+							<div class="current">
+								<div class="info">
+									<div class="city"><small><small>City Name:</small></small> <span id="city-name" class="city-name"></span></div>
+									<div class="temp"><small><small>Temperature:</small></small> <span class="city-temp"></span>&deg;<small>C</small></div>
+									<div class="others"><small><small>Humidity:</small></small> <span class="city-humidity"></span></div>
+									<div class="others"><small><small>Cloudiness:</small></small> <span class="city-clound"></span></div>
+									<div class="others"><small><small>Wind Speed:</small></small> <span class="city-wind"></span></div>
+									<div class="others"><small><small>Air Pressure:</small></small> <span class="city-pressure"></span></div>
+									<div class="others"><small><small>Sunrise:</small></small> <span class="city-sunrise"></span></div>
+									<div class="others"><small><small>Sunset:</small></small> <span class="city-sunset"></span></div>
+									<img class="city-icon" width="200" height="200" />
+									<br/>
+									<!-- System message -->
+									<div class="message">
+										<span id="add-system-message"></span> 
+										<span id="add-error-message"></span>
+									</div>	
+								</div>
+								<div class="icon">
+									<span class="wi-day-sunny"></span>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer small text-muted">Updated <span class="city-update-time"></span></div>
+					</div>
+				</div>
+				
+				
+				
+				
+				
+				<div class="col-md-9 col-md-offset-9">
+					<!-- Area Chart Example-->
+					<div class="card mb-3">
+						<div class="card-header">
+							<i class="fa fa-area-chart"></i>Forecasts: <span class="city-name"></span>, <span class="city-country"></span>
+						</div>
+						<div class="card-body">
+							<div id="graph-container">
+								<canvas id="results-graph" width="85%" height="50"></canvas>
+							</div>
+							<div class="row" id="forecast-icons"></div>
+						</div>
+						
+						<div class="card-footer small text-muted">Updated <span class="city-update-time"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.container-fluid-->
+		
+		<!-- Footer -->
+		<footer class="sticky-footer">
+			<div class="container">
+				<div class="text-center">
+				</div>
+			</div>
+		</footer>
+
+		<!-- Scroll to Top Button -->
+		<a class="scroll-to-top rounded" href="#page-top"> 
+			<i class="fa fa-angle-up"></i>
+		</a>
+		
+	    <!-- Favourites Modal-->
+	    <div class="modal fade" id="favouritesModal" tabindex="-1" role="dialog" aria-labelledby="favouritesModalLabel" aria-hidden="true">
+	      <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+	              <span aria-hidden="true">×</span>
+	            </button>
+	          </div>
+	          <div class="modal-body">
+	          	<table class="table">
+	          	<tr><th>City name</th><th>Action</th></tr>
+	          	<tbody id="favourites-list"></tbody>
+	          	</table>
+				<!-- System message -->
+				<div class="message">
+					<span id="favourites-system-message"></span> 
+					<span id="favourites-error-message"></span>
+				</div>	
+	          </div>
+	          <div class="modal-footer">
+	            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	    
+
+	    
+		<!-- JavaScript -->
+		<script src="assets/vendor/jquery/jquery.min.js"></script>
+		<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="assets/vendor/bootstrap/js/bootstrap-dialog.js"></script>
+		<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    	<script src="assets/vendor/chart.js/Chart.min.js"></script>
+		<script src="assets/js/script-weather.js"></script>
+   		<script src="assets/js/script-framework.js"></script>
+	</div>
+</body>
+</html>
