@@ -1,7 +1,10 @@
-/* init module */
+//Connect to Openweather API - Weather
 const url = 'http://api.openweathermap.org/data/2.5/weather';
+//Create Collection Name
 const collectionName = 'weathers';
+//Initialize DB
 const dataSource = require('./dataSource');
+//Initialize Collection Structure
 const collection = dataSource.model(collectionName, {
 	id: { type: Number },
 	name: { type: String },
@@ -12,7 +15,7 @@ const collection = dataSource.model(collectionName, {
 	date: { type: String }
 });
 
-/* search query parameter convert*/
+// Parameter Convert to json format
 var filerItemIndex = function(json){
 	var result = {};
 	result.id = json.id;
@@ -50,94 +53,111 @@ var convertValue = function(strIndex, strValue, mode){
 	}
 }
 
-/* exports funtion */
+// Export data from Database
 exports.query = function(req, res) {
-	//get parameters
+	//Get Parameters from Database
 	var strIndex = req.params.strIndex;
 	var strValue = req.params.strValue;
     var dbIndex = convertIndex(strIndex, strValue, 'db');
     var dbValue = convertValue(strIndex, strValue, 'db');
 	var apiIndex = convertIndex(strIndex, strValue, 'api');
-	console.log('find ' + strIndex + " - " + strValue);
 
-	//Set db searching base
+	//Database Query
 	var dbQuery = {}; 
 	dbQuery[dbIndex] = dbValue;
 	
-	//Set api searching base
+	//API Query
 	var apiQuery = { units: 'metric', appid: "44c39f3fa462f86b3fc88f5678e5c5ff"};
 	apiQuery[apiIndex] = req.params.strValue;
 	
-	//dataSource.db.collection(collectionName, function(err, collection) {
+	//Retrieve Data from Database
 		collection.findOne(dbQuery, function(err, item) {
-			if (err) { //return error message if something wrong with MongoDB
+			//Prompt error when MongoDB is error
+			if (err) { 
 				console.log(err);
 				res.jsonp(err);
-			} else if (item) { //return item if it can be found on MongoDB
-				if(item.date < dayStr()){ //Check the data date with current
-					console.log("Get by API - 1");
-					callAPI(req, res, item.date, dbQuery, apiQuery); // Call and get the item from API
-				} else {
-					console.log("Get by Database");
+			//When records can be found in database
+			} else if (item) { 
+				//Check the record's date with current date
+				if(item.date < dayStr()){ 
+				//Record get by API
+				console.log("Update weather from API.");
+				//Call API to get the record
+				callAPI(req, res, item.date, dbQuery, apiQuery); 
+				} 
+				else {
+					//Record get from database
+					console.log("Get weather from Database.");
 					res.jsonp(item);
 				}
-			} else { // Call and get the item from API
-				console.log("Get by API - 2");
+			} 
+			else { 
+				// Call API to get new record that doesnt exist in database
+				console.log("Get weather from API.");
+				// Call API to get the record
 				callAPI(req, res, null, dbQuery, apiQuery);
 			}
         });
-    //});
 }
 
-/* common function*/
+//Call API Function
 var callAPI = function(req, res, date, dbQuery, apiQuery) {
 	//Send request
 	var request = require('request');
  	request.get({url: url, qs: apiQuery}, function(err, resq, result) {
-		if (err) { //return error message if something wrong with API call
+		//Prompt error when API function is error	
+		if (err) { 
 			console.log(err);
 			res.jsonp(err);
-		} else { //return item if it can be found by API
-			//get all data
+		//When record can be found in API
+		} 
+		else { 
 			var json = JSON.parse(result);
 			if(json.cod == '200'){
-				//filter data
+				//Filter record with Item Index in josn format
 				var item = filerItemIndex(json);
 				item['date'] = date;
+				//Insert record to database
 				insertDB(item, dbQuery);
-				res.jsonp(item); //return item
-			} else {
-				res.jsonp(json); //return item
+				//Response
+				res.jsonp(item);
+			} 
+			else {
+				res.jsonp(json);
 			}
 		}
 	})
 }
 
-var insertDB = function(item, dbQuery){ //data insert or update
+//Insert record to DB
+var insertDB = function(item, dbQuery){
+	//Check the record's date with current date
 	var d = dayStr();
-	if(item.date <= dayStr()){ //Check the data date with current
-		console.log("DB update");
+	if(item.date <= dayStr()){ 
+		//update the record		
 		item['date'] = d;
-		//dataSource.db.collection(collectionName, function(err, collection) {
+		console.log("Latest weather is updating into database...");
 			collection.update(dbQuery, item, function(err, res) {
+				//When updating record meets error		
 				if (err) {
 					console.log(err);
 					res.jsonp(err);
-				} else {
-					console.log("1 document updated");
+				} 
+				else {
+					//Update Successful
+					console.log("Latest weather has been updated.");
 				}
 			});
-		//});
-	} else {
-		console.log("DB insert");
+	} 
+	else {
+		//Record has been inserted to database
 		item['date'] = d;
-		//dataSource.db.collection(collectionName, function(err, collection) {
-			//collection.insert(item, {safe:true}, function(err, result) {});
+		console.log("Weather has been inserted into database.");
 			collection.create(item, {safe:true}, function(err, result) {});
-		//});
 	}
 }
 
+//Current Date Comparison Function
 function dayStr() {
 	var d= new Date();
 	var dStr = d.toISOString().substring(0, 10);
