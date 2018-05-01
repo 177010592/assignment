@@ -1,15 +1,14 @@
-
-//Init Appication
+//index.js, start with node index.js, then type in url localhost:port/functions/name=CityName
+//Launch express libraries
 var express = require('express');
 var app = express();
+//Listen on Port 443
 var port = process.env.PORT || 443;
 
 
-//Object and Funtction
+//Required Functions
 var weather = require('./modules/weather');
 var forecast = require('./modules/forecast');
-var user = require('./modules/user');
-var favourite = require('./modules/favourite');
 
 //Restfull Setting
 app.get('/weathers/:strIndex=:strValue', weather.query);
