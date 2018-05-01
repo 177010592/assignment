@@ -10,7 +10,7 @@ mongoClient.connect(function(err, mongoClient) {
 }); */
 
 var mongoose = require('mongoose')
-const server = 'mongodb://177010592@stu.vtc.edu.hk:Aa161201@ds263639.mlab.com:63639/assignmentdatabase'
+const server = 'mongodb://177010592:Aa161201@ds263639.mlab.com:63639/assignmentdatabase'
 console.log('connect to server: '+server)
 mongoose.connect(server, function(){
 	console.log('mongodb connected')
